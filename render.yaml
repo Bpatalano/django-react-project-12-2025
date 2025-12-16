@@ -20,9 +20,8 @@ services:
         sync: false
 
   # React Frontend
-  - type: web
+  - type: static
     name: react-frontend
-    runtime: node
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: ./frontend/dist
     envVars:
