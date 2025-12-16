@@ -1,58 +1,41 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
-import { API_ENDPOINTS } from './config'
+import QuestionCreate from './components/QuestionCreate'
+import QuestionAnswer from './components/QuestionAnswer'
+
+type Mode = 'create' | 'answer'
 
 function App() {
-  const [data, setData] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [mode, setMode] = useState<Mode>('answer')
 
-  useEffect(() => {
-    fetch(API_ENDPOINTS.question(1))
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}: ${res.statusText}`)
-        }
-        return res.json()
-      })
-      .then(data => {
-        setData(data)
-        setLoading(false)
-      })
-      .catch(err => {
-        setError(err.message)
-        setLoading(false)
-      })
-  }, [])
+  const toggleMode = () => {
+    setMode(mode === 'create' ? 'answer' : 'create')
+  }
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'monospace' }}>
-      <h1>Question API Test</h1>
-      <p>Fetching question with ID: 1</p>
-      <p>API URL: {API_ENDPOINTS.question(1)}</p>
+    <div style={{ minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <button
+        onClick={toggleMode}
+        style={{
+          position: 'fixed',
+          top: '1rem',
+          right: '1rem',
+          padding: '0.75rem 1.5rem',
+          fontSize: '1rem',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontWeight: 'bold',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          zIndex: 1000,
+        }}
+      >
+        {mode === 'create' ? 'Answer Questions' : 'Create Question'}
+      </button>
 
-      {loading && <p>Loading...</p>}
-
-      {error && (
-        <div style={{ color: 'red', padding: '1rem', border: '1px solid red' }}>
-          <strong>Error:</strong> {error}
-        </div>
-      )}
-
-      {data && (
-        <div style={{ marginTop: '1rem' }}>
-          <h2>Response:</h2>
-          <pre style={{
-            backgroundColor: '#f4f4f4',
-            padding: '1rem',
-            borderRadius: '4px',
-            textAlign: 'left',
-            overflow: 'auto'
-          }}>
-            {JSON.stringify(data, null, 2)}
-          </pre>
-        </div>
-      )}
+      {mode === 'create' ? <QuestionCreate /> : <QuestionAnswer />}
     </div>
   )
 }

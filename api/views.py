@@ -25,9 +25,34 @@ def echo(request):
     return Response({'message': 'Send me some data via POST'})
 
 
-@api_view(['POST'])
-def create_question(request):
-    """Create a new question"""
+@api_view(['GET', 'POST'])
+def questions_list_create(request):
+    """List all questions or create a new multiple choice question"""
+    if request.method == 'GET':
+        questions = Question.objects.all()
+        serializer = QuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+
+    # POST - Create new question
+    data = request.data
+
+    # Validate required fields
+    if not data.get('question'):
+        return Response({'error': 'Question text is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not data.get('options') or not isinstance(data.get('options'), dict):
+        return Response({'error': 'Options must be a dictionary with keys a, b, c, d, e'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not data.get('answer') or not isinstance(data.get('answer'), list):
+        return Response({'error': 'Answer must be a list of correct option keys'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Validate that answer keys exist in options
+    options_keys = set(data.get('options', {}).keys())
+    answer_keys = set(data.get('answer', []))
+
+    if not answer_keys.issubset(options_keys):
+        return Response({'error': 'Answer keys must exist in options'}, status=status.HTTP_400_BAD_REQUEST)
+
     serializer = QuestionSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
