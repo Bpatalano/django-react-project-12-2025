@@ -11,11 +11,13 @@ interface Question {
 
 export default function QuestionAnswer() {
   const [questions, setQuestions] = useState<Question[]>([])
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null)
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([])
+  const [textAnswer, setTextAnswer] = useState('')
   const [showAnswer, setShowAnswer] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [quizSeed] = useState(() => Date.now().toString())
 
   useEffect(() => {
     fetchQuestions()
@@ -25,15 +27,15 @@ export default function QuestionAnswer() {
     setLoading(true)
     setError(null)
     try {
-      const response = await fetch(API_ENDPOINTS.questions)
+      // Use quiz-set endpoint with seed for consistent question sets
+      // Note: Seed is not yet used for caching, but route is prepared for it
+      const response = await fetch(API_ENDPOINTS.quizSet(quizSeed))
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`)
       }
       const data = await response.json()
-      setQuestions(data)
-      if (data.length > 0) {
-        setCurrentQuestion(data[Math.floor(Math.random() * data.length)])
-      }
+      setQuestions(data.questions)
+      setCurrentQuestionIndex(0)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -41,11 +43,15 @@ export default function QuestionAnswer() {
     }
   }
 
-  const getRandomQuestion = () => {
+  const currentQuestion = questions[currentQuestionIndex] || null
+
+  const getNextQuestion = () => {
     if (questions.length === 0) return
-    const randomIndex = Math.floor(Math.random() * questions.length)
-    setCurrentQuestion(questions[randomIndex])
+    // Cycle to next question in the quiz set
+    const nextIndex = (currentQuestionIndex + 1) % questions.length
+    setCurrentQuestionIndex(nextIndex)
     setSelectedAnswers([])
+    setTextAnswer('')
     setShowAnswer(false)
   }
 
@@ -56,19 +62,43 @@ export default function QuestionAnswer() {
     )
   }
 
+  const handleTextAnswerChange = (value: string) => {
+    if (showAnswer) return
+    // For text-match questions, only allow alphanumeric and spaces
+    if (currentQuestion?.type === 'text-match') {
+      const filtered = value.replace(/[^a-zA-Z0-9 ]/g, '')
+      setTextAnswer(filtered)
+    } else {
+      // For numeric, the input type="number" handles validation
+      setTextAnswer(value)
+    }
+  }
+
   const checkAnswer = () => {
     setShowAnswer(true)
   }
 
   const isCorrect = () => {
     if (!currentQuestion) return false
-    const correctSet = new Set(currentQuestion.answer)
-    const selectedSet = new Set(selectedAnswers)
-    return (
-      correctSet.size === selectedSet.size &&
-      [...correctSet].every((key) => selectedSet.has(key))
-    )
+
+    if (currentQuestion.type === 'numeric' || currentQuestion.type === 'text-match') {
+      // For text-based answers, compare normalized lowercase version
+      const userAnswer = textAnswer.trim().toLowerCase()
+      const correctAnswer = currentQuestion.answer[0]
+      return userAnswer === correctAnswer
+    } else {
+      // For multiple choice, compare selected options
+      const correctSet = new Set(currentQuestion.answer)
+      const selectedSet = new Set(selectedAnswers)
+      return (
+        correctSet.size === selectedSet.size &&
+        [...correctSet].every((key) => selectedSet.has(key))
+      )
+    }
   }
+
+  const isTextBasedQuestion = currentQuestion && (currentQuestion.type === 'numeric' || currentQuestion.type === 'text-match')
+  const canSubmitAnswer = isTextBasedQuestion ? textAnswer.trim() !== '' : selectedAnswers.length > 0
 
   if (loading) {
     return (
@@ -110,7 +140,7 @@ export default function QuestionAnswer() {
     <div style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem' }}>
       <h1>Answer Questions</h1>
       <p style={{ color: '#666', marginBottom: '2rem' }}>
-        Select one or more correct answers, then check your response
+        Select the correct answer(s) and check your response. Single-choice questions have one answer, multiple-choice have more.
       </p>
 
       {currentQuestion && (
@@ -122,12 +152,78 @@ export default function QuestionAnswer() {
             backgroundColor: '#f9f9f9',
           }}
         >
-          <h2 style={{ marginTop: 0, marginBottom: '1.5rem', color: '#333' }}>
+          <div
+            style={{
+              display: 'inline-block',
+              padding: '0.5rem 1rem',
+              backgroundColor:
+                currentQuestion.type === 'single-choice'
+                  ? '#fff3cd'
+                  : currentQuestion.type === 'numeric'
+                  ? '#d4edda'
+                  : currentQuestion.type === 'text-match'
+                  ? '#f8d7da'
+                  : '#d1ecf1',
+              border: `1px solid ${
+                currentQuestion.type === 'single-choice'
+                  ? '#ffc107'
+                  : currentQuestion.type === 'numeric'
+                  ? '#28a745'
+                  : currentQuestion.type === 'text-match'
+                  ? '#dc3545'
+                  : '#0dcaf0'
+              }`,
+              borderRadius: '4px',
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              marginBottom: '1rem',
+            }}
+          >
+            {currentQuestion.type === 'single-choice'
+              ? 'Single Choice'
+              : currentQuestion.type === 'multiple-choice'
+              ? 'Multiple Choice'
+              : currentQuestion.type === 'numeric'
+              ? 'Numeric'
+              : 'Text Match'}
+          </div>
+          <h2 style={{ marginTop: '0.5rem', marginBottom: '1.5rem', color: '#333' }}>
             {currentQuestion.question}
           </h2>
 
-          <div style={{ marginBottom: '1.5rem' }}>
-            {Object.entries(currentQuestion.options).map(([key, value]) => {
+          {isTextBasedQuestion ? (
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label
+                htmlFor="answerInput"
+                style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}
+              >
+                Your Answer
+              </label>
+              <input
+                id="answerInput"
+                type={currentQuestion.type === 'numeric' ? 'number' : 'text'}
+                value={textAnswer}
+                onChange={(e) => handleTextAnswerChange(e.target.value)}
+                disabled={showAnswer}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  fontSize: '1rem',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  boxSizing: 'border-box',
+                }}
+                placeholder={currentQuestion.type === 'numeric' ? 'Enter a number' : 'Enter your answer'}
+              />
+              {currentQuestion.type === 'text-match' && (
+                <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
+                  Answer is case-insensitive and will be converted to lowercase.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div style={{ marginBottom: '1.5rem' }}>
+              {Object.entries(currentQuestion.options).map(([key, value]) => {
               const isSelected = selectedAnswers.includes(key)
               const isCorrectAnswer = currentQuestion.answer.includes(key)
               const showCorrect = showAnswer && isCorrectAnswer
@@ -181,8 +277,9 @@ export default function QuestionAnswer() {
                   </div>
                 </div>
               )
-            })}
-          </div>
+              })}
+            </div>
+          )}
 
           {showAnswer && (
             <div
@@ -208,22 +305,22 @@ export default function QuestionAnswer() {
             {!showAnswer && (
               <button
                 onClick={checkAnswer}
-                disabled={selectedAnswers.length === 0}
+                disabled={!canSubmitAnswer}
                 style={{
                   padding: '0.75rem 1.5rem',
                   fontSize: '1rem',
-                  backgroundColor: selectedAnswers.length === 0 ? '#ccc' : '#28a745',
+                  backgroundColor: !canSubmitAnswer ? '#ccc' : '#28a745',
                   color: 'white',
                   border: 'none',
                   borderRadius: '4px',
-                  cursor: selectedAnswers.length === 0 ? 'not-allowed' : 'pointer',
+                  cursor: !canSubmitAnswer ? 'not-allowed' : 'pointer',
                 }}
               >
                 Check Answer
               </button>
             )}
             <button
-              onClick={getRandomQuestion}
+              onClick={getNextQuestion}
               style={{
                 padding: '0.75rem 1.5rem',
                 fontSize: '1rem',
@@ -236,6 +333,10 @@ export default function QuestionAnswer() {
             >
               Next Question
             </button>
+          </div>
+
+          <div style={{ marginTop: '1.5rem', fontSize: '0.875rem', color: '#666', textAlign: 'center' }}>
+            Question {currentQuestionIndex + 1} of {questions.length}
           </div>
         </div>
       )}
