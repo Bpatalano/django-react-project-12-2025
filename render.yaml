@@ -5,6 +5,7 @@ services:
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "gunicorn backend.wsgi:application"
+    plan: free
     envVars:
       - key: PYTHON_VERSION
         value: 3.14.0
@@ -25,6 +26,7 @@ services:
     runtime: static
     buildCommand: "cd frontend && npm install && npm run build"
     staticPublishPath: ./frontend/dist
+    plan: free
     envVars:
       - key: VITE_API_URL
         sync: false
