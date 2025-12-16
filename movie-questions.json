@@ -1,0 +1,192 @@
+[
+  {
+    "question": "Who plays Clark Griswold in National Lampoon’s Christmas Vacation?",
+    "type": "single-choice",
+    "options": {
+      "a": "Chevy Chase",
+      "b": "Bill Murray",
+      "c": "Dan Aykroyd",
+      "d": "Steve Martin"
+    },
+    "answer": ["a"]
+  },
+  {
+    "question": "What is the name of Clark Griswold’s wife?",
+    "type": "single-choice",
+    "options": {
+      "a": "Ellen",
+      "b": "Beth",
+      "c": "Susan",
+      "d": "Linda"
+    },
+    "answer": ["a"]
+  },
+  {
+    "question": "What holiday is the movie centered around?",
+    "type": "single-choice",
+    "options": {
+      "a": "Thanksgiving",
+      "b": "Christmas",
+      "c": "New Year’s Eve",
+      "d": "Easter"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "Which relatives come to stay with the Griswolds?",
+    "type": "multiple-choice",
+    "options": {
+      "a": "Cousin Eddie and his family",
+      "b": "Aunt Bethany",
+      "c": "Uncle Lewis",
+      "d": "Clark’s coworkers"
+    },
+    "answer": ["a", "b", "c"]
+  },
+  {
+    "question": "What is the name of Clark’s cousin?",
+    "type": "text-match",
+    "answer": ["Eddie"]
+  },
+  {
+    "question": "What does Clark hope to receive as his Christmas bonus?",
+    "type": "single-choice",
+    "options": {
+      "a": "A company car",
+      "b": "A membership to the Jelly of the Month Club",
+      "c": "Cash",
+      "d": "Extra vacation days"
+    },
+    "answer": ["c"]
+  },
+  {
+    "question": "What gift does Clark actually receive instead of a cash bonus?",
+    "type": "single-choice",
+    "options": {
+      "a": "A turkey",
+      "b": "A fruit basket",
+      "c": "A Jelly of the Month Club membership",
+      "d": "A watch"
+    },
+    "answer": ["c"]
+  },
+  {
+    "question": "What animal causes chaos in the Griswold house?",
+    "type": "single-choice",
+    "options": {
+      "a": "A raccoon",
+      "b": "A squirrel",
+      "c": "A dog",
+      "d": "A cat"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "Which decorations does Clark obsessively install on his house?",
+    "type": "multiple-choice",
+    "options": {
+      "a": "Christmas lights",
+      "b": "Inflatable snowmen",
+      "c": "Plastic reindeer",
+      "d": "A nativity scene"
+    },
+    "answer": ["a", "c", "d"]
+  },
+  {
+    "question": "How many strands of lights does Clark say he used on the house?",
+    "type": "numeric",
+    "answer": ["25000"]
+  },
+  {
+    "question": "What causes the house lights to finally turn on?",
+    "type": "single-choice",
+    "options": {
+      "a": "Clark replacing a bulb",
+      "b": "Turning on a switch",
+      "c": "Eddie emptying the sewer",
+      "d": "Plugging in the lights"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "What is Aunt Bethany known for saying incorrectly?",
+    "type": "single-choice",
+    "options": {
+      "a": "The Pledge of Allegiance",
+      "b": "Grace before dinner",
+      "c": "Christmas carols",
+      "d": "The national anthem"
+    },
+    "answer": ["d"]
+  },
+  {
+    "question": "Which food item catches fire during dinner?",
+    "type": "single-choice",
+    "options": {
+      "a": "The turkey",
+      "b": "The ham",
+      "c": "The pudding",
+      "d": "The pie"
+    },
+    "answer": ["a"]
+  },
+  {
+    "question": "What does Cousin Eddie dump into the storm drain?",
+    "type": "text-match",
+    "answer": ["sewage"]
+  },
+  {
+    "question": "Which family members die during the movie?",
+    "type": "multiple-choice",
+    "options": {
+      "a": "Aunt Bethany",
+      "b": "Uncle Lewis",
+      "c": "Aunt Bethany’s cat",
+      "d": "Clark’s boss"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "What is the name of Clark’s boss?",
+    "type": "text-match",
+    "answer": ["Frank Shirley"]
+  },
+  {
+    "question": "Which police force shows up near the end of the movie?",
+    "type": "single-choice",
+    "options": {
+      "a": "Local police",
+      "b": "State troopers",
+      "c": "The SWAT team",
+      "d": "The FBI"
+    },
+    "answer": ["c"]
+  },
+  {
+    "question": "Who kidnaps Clark’s boss?",
+    "type": "single-choice",
+    "options": {
+      "a": "Clark",
+      "b": "Eddie",
+      "c": "Rusty",
+      "d": "Audrey"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "What does Clark finally receive at the end of the movie?",
+    "type": "single-choice",
+    "options": {
+      "a": "A raise",
+      "b": "A cash bonus",
+      "c": "A new car",
+      "d": "A promotion"
+    },
+    "answer": ["b"]
+  },
+  {
+    "question": "How many Griswold children are there?",
+    "type": "numeric",
+    "answer": ["2"]
+  }
+]
