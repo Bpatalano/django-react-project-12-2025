@@ -25,10 +25,10 @@ export default function QuestionCreateText({ data, onChange }: Props) {
   }
 
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
+    <div className="mb-6">
       <label
         htmlFor="textAnswer"
-        style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}
+        className="block mb-2 font-semibold text-slate-300 text-sm sm:text-base"
       >
         Answer
       </label>
@@ -37,18 +37,11 @@ export default function QuestionCreateText({ data, onChange }: Props) {
         type="text"
         value={localValue}
         onChange={(e) => handleChange(e.target.value)}
-        style={{
-          width: '100%',
-          padding: '0.75rem',
-          fontSize: '1rem',
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          boxSizing: 'border-box',
-        }}
+        className="w-full px-4 py-3 text-base sm:text-lg bg-dark-elevated border-2 border-dark-border rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
         placeholder="Enter the answer (alphanumeric only)"
       />
-      <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-        Answer will be stored in lowercase. Type will be auto-detected: numbers = Numeric, text = Text Match.
+      <p className="text-sm text-slate-400 mt-3 bg-dark-elevated p-3 rounded-lg border border-dark-border">
+        💡 <strong>Note:</strong> Answer will be stored in lowercase. Type will be auto-detected: numbers = Numeric, text = Text Match.
       </p>
     </div>
   )

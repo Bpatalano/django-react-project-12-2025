@@ -52,67 +52,45 @@ export default function QuestionCreateChoices({ data, onChange }: Props) {
   const optionKeys: OptionKey[] = ['a', 'b', 'c', 'd', 'e']
 
   return (
-    <div style={{ marginBottom: '1.5rem' }}>
-      <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 'bold' }}>
+    <div className="mb-6">
+      <label className="block mb-3 font-semibold text-slate-300 text-sm sm:text-base">
         Options
       </label>
       {optionKeys.map((key) => (
         <div
           key={key}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            marginBottom: '0.75rem',
-            gap: '0.5rem',
-          }}
+          className="flex flex-col sm:flex-row items-start sm:items-center mb-3 gap-2"
         >
-          <span
-            style={{
-              fontWeight: 'bold',
-              minWidth: '30px',
-              textTransform: 'uppercase',
-            }}
-          >
+          <span className="font-bold min-w-[30px] uppercase text-primary-light text-lg">
             {key}.
           </span>
           <input
             type="text"
             value={localOptions[key]}
             onChange={(e) => handleOptionChange(key, e.target.value)}
-            style={{
-              flex: 1,
-              padding: '0.75rem',
-              fontSize: '1rem',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-            }}
+            className="flex-1 w-full sm:w-auto px-4 py-3 text-base bg-dark-elevated border-2 border-dark-border rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
             placeholder={`Option ${key.toUpperCase()}`}
           />
           <label
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.25rem',
-              cursor: 'pointer',
-              padding: '0.5rem',
-              backgroundColor: localCorrectKeys.includes(key) ? '#d4edda' : '#f8f9fa',
-              border: `2px solid ${localCorrectKeys.includes(key) ? '#28a745' : '#ccc'}`,
-              borderRadius: '4px',
-            }}
+            className={`flex items-center gap-2 cursor-pointer px-4 py-3 border-2 rounded-lg transition-all duration-200 ${
+              localCorrectKeys.includes(key)
+                ? 'bg-success-bg border-success text-success-light shadow-lg shadow-success/20'
+                : 'bg-dark-elevated border-dark-border text-slate-400 hover:border-success'
+            }`}
           >
             <input
               type="checkbox"
               checked={localCorrectKeys.includes(key)}
               onChange={() => toggleCorrectAnswer(key)}
               disabled={!localOptions[key].trim()}
-              style={{ cursor: 'pointer' }}
+              className="w-4 h-4 cursor-pointer accent-success"
             />
-            <span style={{ fontSize: '0.875rem', fontWeight: 'bold' }}>Correct</span>
+            <span className="text-sm font-bold whitespace-nowrap">✓ Correct</span>
           </label>
         </div>
       ))}
-      <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-        Leave options blank if not needed. Check "Correct" for one or more right answers.
+      <p className="text-sm text-slate-400 mt-3 bg-dark-elevated p-3 rounded-lg border border-dark-border">
+        💡 <strong>Tip:</strong> Leave options blank if not needed. Check "Correct" for one or more right answers.
       </p>
     </div>
   )

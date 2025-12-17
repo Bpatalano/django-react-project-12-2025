@@ -13,6 +13,7 @@ import { answerValidators, getEmptyAnswerForType } from '../types/question'
 type AnswerMode = 'choice' | 'text'
 
 export default function QuestionCreate() {
+  const [submissionId, setSubmissionId] = useState<number>(1)
   const [question, setQuestion] = useState('')
   const [answerMode, setAnswerMode] = useState<AnswerMode>('choice')
 
@@ -74,6 +75,7 @@ export default function QuestionCreate() {
       // Reset form
       setQuestion('')
       setAnswerData(getEmptyAnswerForType(answerType).data)
+      setSubmissionId((id) => id + 1)
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -82,18 +84,22 @@ export default function QuestionCreate() {
   }
 
   return (
-    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem' }}>
-      <h1>Create Question</h1>
-      <p style={{ color: '#666', marginBottom: '1.5rem' }}>
-        Choose your answer mode and create a question.
-      </p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-100 mb-3">
+          Create Question
+        </h1>
+        <p className="text-slate-400 text-base sm:text-lg">
+          Choose your answer mode and create a question.
+        </p>
+      </div>
 
       {/* Answer Mode Toggle */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.75rem', fontWeight: 'bold' }}>
+      <div className="mb-6 sm:mb-8">
+        <label className="block mb-3 font-semibold text-slate-300 text-sm sm:text-base">
           Answer Mode
         </label>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <button
             type="button"
             onClick={() => {
@@ -101,19 +107,13 @@ export default function QuestionCreate() {
               setAnswerType('single-choice')
               setAnswerData(getEmptyAnswerForType('single-choice').data)
             }}
-            style={{
-              flex: 1,
-              padding: '0.75rem',
-              fontSize: '1rem',
-              backgroundColor: answerMode === 'choice' ? '#007bff' : '#e9ecef',
-              color: answerMode === 'choice' ? 'white' : '#495057',
-              border: `2px solid ${answerMode === 'choice' ? '#007bff' : '#dee2e6'}`,
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: answerMode === 'choice' ? 'bold' : 'normal',
-            }}
+            className={`px-4 py-3 sm:py-4 text-base sm:text-lg rounded-lg border-2 transition-all duration-200 font-semibold ${
+              answerMode === 'choice'
+                ? 'bg-primary text-white border-primary shadow-lg shadow-primary/50'
+                : 'bg-dark-surface text-slate-300 border-dark-border hover:border-primary hover:bg-dark-elevated'
+            }`}
           >
-            Multiple Choice
+            🎯 Multiple Choice
           </button>
           <button
             type="button"
@@ -122,42 +122,28 @@ export default function QuestionCreate() {
               setAnswerType('text-match')
               setAnswerData(getEmptyAnswerForType('text-match').data)
             }}
-            style={{
-              flex: 1,
-              padding: '0.75rem',
-              fontSize: '1rem',
-              backgroundColor: answerMode === 'text' ? '#007bff' : '#e9ecef',
-              color: answerMode === 'text' ? 'white' : '#495057',
-              border: `2px solid ${answerMode === 'text' ? '#007bff' : '#dee2e6'}`,
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontWeight: answerMode === 'text' ? 'bold' : 'normal',
-            }}
+            className={`px-4 py-3 sm:py-4 text-base sm:text-lg rounded-lg border-2 transition-all duration-200 font-semibold ${
+              answerMode === 'text'
+                ? 'bg-primary text-white border-primary shadow-lg shadow-primary/50'
+                : 'bg-dark-surface text-slate-300 border-dark-border hover:border-primary hover:bg-dark-elevated'
+            }`}
           >
-            Text Answer
+            ✍️ Text Answer
           </button>
         </div>
       </div>
 
       {/* Question Type Indicator */}
-      <div
-        style={{
-          padding: '0.75rem 1rem',
-          backgroundColor: '#e7f3ff',
-          border: '1px solid #007bff',
-          borderRadius: '4px',
-          marginBottom: '1.5rem',
-          display: 'inline-block',
-        }}
-      >
-        <strong>Question Type:</strong> {answerType}
+      <div className="inline-block px-4 py-2 bg-dark-surface border-2 border-primary/30 rounded-lg mb-6 sm:mb-8">
+        <span className="font-semibold text-slate-300 text-sm sm:text-base">Question Type:</span>{' '}
+        <span className="text-primary-light font-bold">{answerType}</span>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1.5rem' }}>
+      <form onSubmit={handleSubmit} className="bg-dark-surface rounded-xl p-4 sm:p-6 lg:p-8 border-2 border-dark-border shadow-xl">
+        <div className="mb-6">
           <label
             htmlFor="question"
-            style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}
+            className="block mb-2 font-semibold text-slate-300 text-sm sm:text-base"
           >
             Question Text
           </label>
@@ -166,20 +152,14 @@ export default function QuestionCreate() {
             type="text"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              fontSize: '1rem',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              boxSizing: 'border-box',
-            }}
+            className="w-full px-4 py-3 text-base sm:text-lg bg-dark-elevated border-2 border-dark-border rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
             placeholder="Enter your question"
           />
         </div>
 
         {answerMode === 'choice' ? (
           <QuestionCreateChoices
+            key={submissionId}
             data={answerData as MultipleChoiceAnswer}
             onChange={(data, type) => {
               setAnswerData(data)
@@ -188,6 +168,7 @@ export default function QuestionCreate() {
           />
         ) : (
           <QuestionCreateText
+            key={submissionId}
             data={answerData as TextAnswer | NumericAnswer}
             answerType={answerType as 'numeric' | 'text-match'}
             onChange={(data, type) => {
@@ -198,47 +179,27 @@ export default function QuestionCreate() {
         )}
 
         {submitError && (
-          <div
-            style={{
-              color: 'red',
-              padding: '1rem',
-              border: '1px solid red',
-              borderRadius: '4px',
-              marginBottom: '1rem',
-            }}
-          >
-            <strong>Error:</strong> {submitError}
+          <div className="p-4 mb-6 text-danger-light bg-danger-bg border-2 border-danger rounded-lg">
+            <strong className="font-semibold">❌ Error:</strong> {submitError}
           </div>
         )}
 
         {success && (
-          <div
-            style={{
-              color: 'green',
-              padding: '1rem',
-              border: '1px solid green',
-              borderRadius: '4px',
-              marginBottom: '1rem',
-            }}
-          >
-            Question created successfully!
+          <div className="p-4 mb-6 text-success-light bg-success-bg border-2 border-success rounded-lg">
+            <strong className="font-semibold">✅ Success!</strong> Question created successfully!
           </div>
         )}
 
         <button
           type="submit"
           disabled={loading || !isFormValid}
-          style={{
-            padding: '0.75rem 2rem',
-            fontSize: '1rem',
-            backgroundColor: loading || !isFormValid ? '#ccc' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: loading || !isFormValid ? 'not-allowed' : 'pointer',
-          }}
+          className={`w-full sm:w-auto px-8 py-3 sm:py-4 text-base sm:text-lg font-bold rounded-lg transition-all duration-200 ${
+            loading || !isFormValid
+              ? 'bg-dark-border text-slate-500 cursor-not-allowed opacity-50'
+              : 'bg-primary text-white hover:bg-primary-hover cursor-pointer shadow-lg shadow-primary/30 hover:shadow-primary/50'
+          }`}
         >
-          {loading ? 'Creating...' : 'Create Question'}
+          {loading ? '⏳ Creating...' : '✨ Create Question'}
         </button>
       </form>
     </div>

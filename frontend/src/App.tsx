@@ -13,26 +13,12 @@ function App() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+    <div className="min-h-screen font-sans bg-dark-bg text-slate-100">
       <button
         onClick={toggleMode}
-        style={{
-          position: 'fixed',
-          top: '1rem',
-          right: '1rem',
-          padding: '0.75rem 1.5rem',
-          fontSize: '1rem',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          zIndex: 1000,
-        }}
+        className="fixed top-4 right-4 sm:top-6 sm:right-6 px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base bg-dark-elevated text-slate-100 border-2 border-dark-border rounded-lg cursor-pointer font-semibold shadow-lg z-[1000] hover:bg-primary hover:border-primary transition-all duration-200"
       >
-        {mode === 'create' ? 'Answer Questions' : 'Create Question'}
+        {mode === 'create' ? '📝 Answer Questions' : '✏️ Create Question'}
       </button>
 
       {mode === 'create' ? <QuestionCreate /> : <QuestionAnswer />}

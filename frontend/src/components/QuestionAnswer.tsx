@@ -102,24 +102,19 @@ export default function QuestionAnswer() {
 
   if (loading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p>Loading questions...</p>
+      <div className="text-center p-8">
+        <div className="inline-block animate-pulse">
+          <p className="text-slate-300 text-lg">⏳ Loading questions...</p>
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div style={{ maxWidth: '700px', margin: '2rem auto', padding: '2rem' }}>
-        <div
-          style={{
-            color: 'red',
-            padding: '1rem',
-            border: '1px solid red',
-            borderRadius: '4px',
-          }}
-        >
-          <strong>Error:</strong> {error}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="p-4 sm:p-6 text-danger-light bg-danger-bg border-2 border-danger rounded-lg">
+          <strong className="font-semibold">❌ Error:</strong> {error}
         </div>
       </div>
     )
@@ -127,75 +122,56 @@ export default function QuestionAnswer() {
 
   if (questions.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <h1>Answer Questions</h1>
-        <p style={{ color: '#666', marginTop: '1rem' }}>
-          No questions available. Create some questions first!
+      <div className="text-center p-8">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-100 mb-4">
+          Answer Questions
+        </h1>
+        <p className="text-slate-400 text-lg mt-4">
+          📝 No questions available. Create some questions first!
         </p>
       </div>
     )
   }
 
   return (
-    <div style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem' }}>
-      <h1>Answer Questions</h1>
-      <p style={{ color: '#666', marginBottom: '2rem' }}>
-        Select the correct answer(s) and check your response. Single-choice questions have one answer, multiple-choice have more.
-      </p>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="mb-8 sm:mb-10">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-100 mb-3">
+          Answer Questions
+        </h1>
+        <p className="text-slate-400 text-base sm:text-lg">
+          Select the correct answer(s) and check your response. Test your knowledge!
+        </p>
+      </div>
 
       {currentQuestion && (
-        <div
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '2rem',
-            backgroundColor: '#f9f9f9',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-block',
-              padding: '0.5rem 1rem',
-              backgroundColor:
-                currentQuestion.type === 'single-choice'
-                  ? '#fff3cd'
-                  : currentQuestion.type === 'numeric'
-                  ? '#d4edda'
-                  : currentQuestion.type === 'text-match'
-                  ? '#f8d7da'
-                  : '#d1ecf1',
-              border: `1px solid ${
-                currentQuestion.type === 'single-choice'
-                  ? '#ffc107'
-                  : currentQuestion.type === 'numeric'
-                  ? '#28a745'
-                  : currentQuestion.type === 'text-match'
-                  ? '#dc3545'
-                  : '#0dcaf0'
-              }`,
-              borderRadius: '4px',
-              fontSize: '0.875rem',
-              fontWeight: 'bold',
-              marginBottom: '1rem',
-            }}
-          >
-            {currentQuestion.type === 'single-choice'
-              ? 'Single Choice'
-              : currentQuestion.type === 'multiple-choice'
-              ? 'Multiple Choice'
+        <div className="bg-dark-surface border-2 border-dark-border rounded-xl p-4 sm:p-6 lg:p-8 shadow-2xl">
+          <div className={`inline-block px-4 py-2 rounded-lg text-sm font-bold mb-4 border-2 ${
+            currentQuestion.type === 'single-choice'
+              ? 'bg-warning-bg border-warning text-warning'
               : currentQuestion.type === 'numeric'
-              ? 'Numeric'
-              : 'Text Match'}
+              ? 'bg-success-bg border-success text-success-light'
+              : currentQuestion.type === 'text-match'
+              ? 'bg-pink-900 border-pink-500 text-pink-300'
+              : 'bg-primary/20 border-primary text-primary-light'
+          }`}>
+            {currentQuestion.type === 'single-choice'
+              ? '🎯 Single Choice'
+              : currentQuestion.type === 'multiple-choice'
+              ? '✅ Multiple Choice'
+              : currentQuestion.type === 'numeric'
+              ? '🔢 Numeric'
+              : '✍️ Text Match'}
           </div>
-          <h2 style={{ marginTop: '0.5rem', marginBottom: '1.5rem', color: '#333' }}>
+          <h2 className="mt-2 mb-6 text-xl sm:text-2xl lg:text-3xl font-bold text-slate-100">
             {currentQuestion.question}
           </h2>
 
           {isTextBasedQuestion ? (
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div className="mb-6">
               <label
                 htmlFor="answerInput"
-                style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}
+                className="block mb-2 font-semibold text-slate-300"
               >
                 Your Answer
               </label>
@@ -205,24 +181,17 @@ export default function QuestionAnswer() {
                 value={textAnswer}
                 onChange={(e) => handleTextAnswerChange(e.target.value)}
                 disabled={showAnswer}
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  fontSize: '1rem',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  boxSizing: 'border-box',
-                }}
+                className="w-full px-4 py-3 text-base sm:text-lg bg-dark-elevated border-2 border-dark-border rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 placeholder={currentQuestion.type === 'numeric' ? 'Enter a number' : 'Enter your answer'}
               />
               {currentQuestion.type === 'text-match' && (
-                <p style={{ fontSize: '0.875rem', color: '#666', marginTop: '0.5rem' }}>
-                  Answer is case-insensitive and will be converted to lowercase.
+                <p className="text-sm text-slate-400 mt-2 bg-dark-elevated p-2 rounded border border-dark-border">
+                  💡 Answer is case-insensitive and will be converted to lowercase.
                 </p>
               )}
             </div>
           ) : (
-            <div style={{ marginBottom: '1.5rem' }}>
+            <div className="mb-6 space-y-3">
               {Object.entries(currentQuestion.options).map(([key, value]) => {
               const isSelected = selectedAnswers.includes(key)
               const isCorrectAnswer = currentQuestion.answer.includes(key)
@@ -233,46 +202,31 @@ export default function QuestionAnswer() {
                 <div
                   key={key}
                   onClick={() => toggleOption(key)}
-                  style={{
-                    padding: '1rem',
-                    marginBottom: '0.75rem',
-                    border: `2px solid ${
-                      showCorrect
-                        ? '#28a745'
-                        : showIncorrect
-                        ? '#dc3545'
-                        : isSelected
-                        ? '#007bff'
-                        : '#ccc'
-                    }`,
-                    borderRadius: '4px',
-                    backgroundColor: showCorrect
-                      ? '#d4edda'
+                  className={`p-4 border-2 rounded-lg transition-all duration-200 ${
+                    showCorrect
+                      ? 'border-success bg-success-bg shadow-lg shadow-success/20'
                       : showIncorrect
-                      ? '#f8d7da'
+                      ? 'border-danger bg-danger-bg shadow-lg shadow-danger/20'
                       : isSelected
-                      ? '#e7f3ff'
-                      : 'white',
-                    cursor: showAnswer ? 'default' : 'pointer',
-                    transition: 'all 0.2s',
-                  }}
+                      ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20'
+                      : 'border-dark-border bg-dark-elevated hover:border-primary/50'
+                  } ${showAnswer ? 'cursor-default' : 'cursor-pointer hover:scale-[1.01]'}`}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <span
-                      style={{
-                        fontWeight: 'bold',
-                        minWidth: '30px',
-                        textTransform: 'uppercase',
-                      }}
-                    >
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold min-w-[30px] uppercase text-primary-light text-lg">
                       {key}.
                     </span>
-                    <span style={{ flex: 1 }}>{value}</span>
+                    <span className={`flex-1 ${
+                      showCorrect ? 'text-success-light font-semibold' :
+                      showIncorrect ? 'text-danger-light font-semibold' :
+                      isSelected ? 'text-slate-100 font-medium' :
+                      'text-slate-300'
+                    }`}>{value}</span>
                     {showCorrect && (
-                      <span style={{ color: '#28a745', fontWeight: 'bold' }}>✓</span>
+                      <span className="text-success text-2xl font-bold">✓</span>
                     )}
                     {showIncorrect && (
-                      <span style={{ color: '#dc3545', fontWeight: 'bold' }}>✗</span>
+                      <span className="text-danger text-2xl font-bold">✗</span>
                     )}
                   </div>
                 </div>
@@ -283,60 +237,53 @@ export default function QuestionAnswer() {
 
           {showAnswer && (
             <div
-              style={{
-                padding: '1rem',
-                backgroundColor: isCorrect() ? '#d4edda' : '#f8d7da',
-                border: `1px solid ${isCorrect() ? '#28a745' : '#dc3545'}`,
-                borderRadius: '4px',
-                marginBottom: '1rem',
-              }}
+              className={`p-4 sm:p-6 border-2 rounded-lg mb-6 ${
+                isCorrect()
+                  ? 'bg-success-bg border-success shadow-lg shadow-success/20'
+                  : 'bg-danger-bg border-danger shadow-lg shadow-danger/20'
+              }`}
             >
-              <strong>{isCorrect() ? 'Correct!' : 'Incorrect'}</strong>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl">{isCorrect() ? '🎉' : '❌'}</span>
+                <strong className={`text-lg ${isCorrect() ? 'text-success-light' : 'text-danger-light'}`}>
+                  {isCorrect() ? 'Correct!' : 'Incorrect'}
+                </strong>
+              </div>
               {!isCorrect() && (
-                <p style={{ marginTop: '0.5rem', marginBottom: 0 }}>
-                  Correct answer{currentQuestion.answer.length > 1 ? 's' : ''}:{' '}
-                  {currentQuestion.answer.map((a) => a.toUpperCase()).join(', ')}
+                <p className={`mt-2 mb-0 text-slate-300`}>
+                  <strong>Correct answer{currentQuestion.answer.length > 1 ? 's' : ''}:</strong>{' '}
+                  <span className="text-success-light font-bold">
+                    {currentQuestion.answer.map((a) => a.toUpperCase()).join(', ')}
+                  </span>
                 </p>
               )}
             </div>
           )}
 
-          <div style={{ display: 'flex', gap: '1rem' }}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {!showAnswer && (
               <button
                 onClick={checkAnswer}
                 disabled={!canSubmitAnswer}
-                style={{
-                  padding: '0.75rem 1.5rem',
-                  fontSize: '1rem',
-                  backgroundColor: !canSubmitAnswer ? '#ccc' : '#28a745',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: !canSubmitAnswer ? 'not-allowed' : 'pointer',
-                }}
+                className={`px-6 py-3 sm:py-4 text-base sm:text-lg font-bold border-none rounded-lg transition-all duration-200 ${
+                  !canSubmitAnswer
+                    ? 'bg-dark-border text-slate-500 cursor-not-allowed opacity-50'
+                    : 'bg-success text-white hover:bg-success-hover cursor-pointer shadow-lg shadow-success/30 hover:shadow-success/50'
+                }`}
               >
-                Check Answer
+                ✅ Check Answer
               </button>
             )}
             <button
               onClick={getNextQuestion}
-              style={{
-                padding: '0.75rem 1.5rem',
-                fontSize: '1rem',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
+              className="px-6 py-3 sm:py-4 text-base sm:text-lg font-bold text-white bg-primary hover:bg-primary-hover border-none rounded-lg cursor-pointer shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all duration-200"
             >
-              Next Question
+              ➡️ Next Question
             </button>
           </div>
 
-          <div style={{ marginTop: '1.5rem', fontSize: '0.875rem', color: '#666', textAlign: 'center' }}>
-            Question {currentQuestionIndex + 1} of {questions.length}
+          <div className="mt-6 text-sm sm:text-base text-slate-400 text-center bg-dark-elevated p-3 rounded-lg border border-dark-border">
+            📊 Question <span className="text-primary-light font-bold">{currentQuestionIndex + 1}</span> of <span className="text-primary-light font-bold">{questions.length}</span>
           </div>
         </div>
       )}
